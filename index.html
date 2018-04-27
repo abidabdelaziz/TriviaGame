@@ -1,0 +1,138 @@
+<!-- Students: Our work lies in the slideshow.js file. -->
+
+<!DOCTYPE html>
+
+<html lang="en-us">
+
+  <head>
+
+    <meta charset="UTF-8">
+    <title>Trivia</title>
+
+    <style>
+
+     
+
+      #answers{
+
+          float:left;
+      }
+
+    </style>
+ <!-- jQuery -->
+ <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+
+    <div id = "start">
+    <button id = "action">  Click to Play </button>
+    </div>
+
+    <div id="time">(Time)</div>
+
+    <div id="mainScreen"> And so a question will be asked!</div>
+            
+    
+        <div>      
+            <div id= "answerBox">
+                    <br>
+                    <button type="button" id ="que1" class="answers">: Answer 1 :</button><br>
+                    <br>
+                    <br>
+                    <button type="button" id ="que2" class="answers">: Answer 2 :</button><br>
+                    <br>
+                    <br>
+                    <button type="button" id ="que3" class="answers">: Answer 3 :</button><br>
+                    <br>
+                    <br>
+                    <button type="button" id ="que4" class="answers">: Answer 4 :</button>
+            </div>
+        <div>
+
+        <br>
+        <div id="score"> </div>
+
+    <script>
+        var maxTime = 60;
+        var correct= 0;  //put calculation in the display portion
+        var wrong = 0;  //put calculation in the display portion
+        var t = 0; var tRem=0;
+        var queBank= { 0:["What Color is a Submarine?","Yellow"], 1: ["How big is a Strawberry Field?","Forever"], 2 : ["Does Lucy like the Sky or the ________?", "Diamond"] }
+        var ansBank= { 0:["Gray","Yellow","Brown","Black"], 1: ["1 acre","1 plot","Forever","1 love"], 2: ["Diamond","Opal","Ruby","Sapphire"] }
+        var gifYEs= { 0:"gif",1:"gif",2:"gif"}
+        var gifNo={ 0:"gif",1:"gif",2:"gif"}
+        var queCount= Object.getOwnPropertyNames(queBank).length
+        var queNum= 0;
+        var clockRunning= false;
+        var intervalId;
+        var count=0;
+        var score
+
+        var game= { 
+
+            start : function(){
+                    if (!clockRunning){
+                        $("#action").text("Next")
+                        $("#time").text("0"+"/60 seconds")
+                        intervalId= setInterval(game.countQ,1000)
+                        clockRunning=true;
+                    $("#mainScreen").text(queBank[count][0])
+                    $("#que1").text(ansBank[count][0])
+                    $("#que2").text(ansBank[count][1])
+                    $("#que3").text(ansBank[count][2])
+                    $("#que4").text(ansBank[count][3])
+                    }
+            },
+
+            countQ : function(){
+                t+=1;
+                $("#time").text(""+t+"/60 seconds")
+                if ( t==60){
+                    wrong+=1
+                    count+=1
+                    clockRunning=false;
+                  clearInterval(intervalId);
+                }
+            }, 
+
+            answer : function(event){               
+                if (clockRunning){
+                    reply= event.target.innerHTML;
+                    if(reply==queBank[count][1]){
+                        correct+=1;
+                        count+=1;
+                        tRem+=t 
+                        t=0;                        
+                        clockRunning=false;
+                        clearInterval(intervalId);
+                        // display good gif
+                    }
+                    else if (reply!=queBank[count][1]){
+
+                        wrong+=1;
+                        count+=1;
+                        clockRunning=false;
+                        tRem+=t
+                        t=0;
+                       clearInterval(intervalId);
+                        //display bad gif
+                    }                 
+                    if (count == queCount){
+                        console.log("Drop the Bass")
+                        score= (tRem*correct)/wrong
+                        $("#score").text("You scored "+score+ "!")
+                        clockRunning=true
+                    }
+             }
+            }       
+        }
+
+$("#start").on("click", game.start);
+$(".answers").on("click",game.answer)
+    </script>
+
+  </body>
+
+</html>
+
